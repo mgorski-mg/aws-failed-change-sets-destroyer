@@ -56,7 +56,7 @@ Resources:
                 - ec2:DescribeRegions
                 - cloudformation:ListStacks
                 - cloudformation:ListChangeSets
-                - cloudformation:DeleteStackSet
+                - cloudformation:DeleteChangeSet
               Resource: '*'
 
   Scheduler:
