@@ -1,0 +1,78 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+
+Description: Failed Change Sets Destroyer deletes failed change sets from CloudFormation stacks.
+
+Metadata:
+  AWS::ServerlessRepo::Application:
+    Name: failed-change-sets-destroyer
+    Description: Failed Change Sets Destroyer deletes failed change sets from CloudFormation stacks.
+    Author: Michal Gorski
+    SpdxLicenseId: Apache-2.0
+    LicenseUrl: LICENSE
+    ReadmeUrl: README.md
+    Labels: [ 'lambda','cloudwatch','cron','cloudformation','change-set' ]
+    HomePageUrl: https://github.com/mgorski-mg/aws-failed-change-sets-destroyer
+    SemanticVersion: 1.0.0
+    SourceCodeUrl: https://github.com/mgorski-mg/aws-failed-change-sets-destroyer
+
+Parameters:
+  SchedulerCronParameter:
+    Type: String
+    Description: Enter scheduler cron expresion. Default is cron(0 0 1 * ? *).
+    Default: cron(0 0 1 * ? *)
+  SchedulerEnabledParameter:
+    Type: String
+    Description: Enable scheduler. Default is ENABLED.
+    Default: DISABLED
+    AllowedValues: [ ENABLED, DISABLED ]
+
+Resources:
+  FailedChangeSetsDestroyer:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: Deletes failed change sets from CloudFormation stacks.
+      CodeUri: code/
+      Handler: handler.lambda_handler
+      Runtime: python3.8
+      Timeout: 900
+      Tracing: Active
+      # SAM not used because of a bug in Enabled: !Ref SchedulerEnabledParameter - https://github.com/awslabs/serverless-application-model/issues/1360
+      #      Events:
+      #        Schedule:
+      #          Type: Schedule
+      #          Properties:
+      #            Name: Scheduler
+      #            Description: Scheduler
+      #            Enabled: !Ref SchedulerEnabledParameter
+      #            Schedule: !Ref SchedulerCronParameter
+      #            Input: '{"dry_run": false}'
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Action:
+                - ec2:DescribeRegions
+                - cloudformation:ListStacks
+                - cloudformation:ListChangeSets
+                - cloudformation:DeleteStackSet
+              Resource: '*'
+
+  Scheduler:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: !Ref SchedulerCronParameter
+      State: !Ref SchedulerEnabledParameter
+      Targets:
+        - Id: Scheduler
+          Arn: !GetAtt FailedChangeSetsDestroyer.Arn
+          Input: '{"dry_run": false}'
+
+  SchedulerPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref FailedChangeSetsDestroyer
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt Scheduler.Arn
