@@ -59,6 +59,12 @@ Resources:
                 - cloudformation:DeleteChangeSet
               Resource: '*'
 
+  FailedChangeSetsDestroyerLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${FailedChangeSetsDestroyer}
+      RetentionInDays: 180
+
   Scheduler:
     Type: AWS::Events::Rule
     Properties:
