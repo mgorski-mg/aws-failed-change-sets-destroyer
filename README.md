@@ -1,7 +1,7 @@
 # AWS Failed Change Set Destroyer
 Failed Change Set Destroyer deletes failed change sets from CloudFormation stacks.
 
-Available on the [AWS Serverless Application Repository](https://aws.amazon.com/serverless) - [orphaned-log-groups-collector](https://eu-west-1.console.aws.amazon.com/lambda/home?region=eu-west-1#/create/app?applicationId=arn:aws:serverlessrepo:eu-west-1:275418140668:applications/failed-change-sets-destroyer)
+Available on the [AWS Serverless Application Repository](https://aws.amazon.com/serverless) - [failed-change-sets-destroyer](https://eu-west-1.console.aws.amazon.com/lambda/home?region=eu-west-1#/create/app?applicationId=arn:aws:serverlessrepo:eu-west-1:275418140668:applications/failed-change-sets-destroyer)
 
 ## Why is it helpful?
 Deploying an unchanged stack creates failed change set which may lead to failure with the following error message:
