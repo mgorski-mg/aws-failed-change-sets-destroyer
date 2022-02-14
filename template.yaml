@@ -13,7 +13,7 @@ Metadata:
     ReadmeUrl: README.md
     Labels: [ 'lambda','cloudwatch','cron','cloudformation','change-set' ]
     HomePageUrl: https://github.com/mgorski-mg/aws-failed-change-sets-destroyer
-    SemanticVersion: 1.0.0
+    SemanticVersion: 1.1.1
     SourceCodeUrl: https://github.com/mgorski-mg/aws-failed-change-sets-destroyer
 
 Parameters:

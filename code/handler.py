@@ -1,5 +1,6 @@
 import json
 import boto3
+from botocore.config import Config
 
 
 def lambda_handler(event, context):
@@ -8,7 +9,9 @@ def lambda_handler(event, context):
 
     for region in regions:
         print('REGION: {}'.format(region))
-        cfn_client = boto3.client('cloudformation', region_name=region)
+        config = Config(retries={'max_attempts': 50, 'mode': 'standard'})
+        cfn_client = boto3.client('cloudformation', region_name=region, config=config)
+
         failed_change_sets = find_failed_change_sets(cfn_client)
         delete_change_sets(failed_change_sets, cfn_client, region, dry_run)
 
@@ -41,11 +44,10 @@ def check_stack(stack_name, cfn_client):
 
 def delete_change_sets(failed_change_sets, cfn_client, region, dry_run):
     print('Stacks with failed change sets to remove:\n{}'.format(json.dumps(failed_change_sets, default=lambda x: x.__dict__)))
+    print('There were {} failed change sets in {}.'.format(len(failed_change_sets), region))
     if not dry_run:
         for change_set in failed_change_sets:
             cfn_client.delete_change_set(StackName=change_set.stack_name, ChangeSetName=change_set.name)
-
-    print('There were {} failed change sets in {}.'.format(len(failed_change_sets), region))
 
 
 def get_dry_run_parameter(event):
