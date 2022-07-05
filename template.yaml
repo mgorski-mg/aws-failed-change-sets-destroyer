@@ -13,7 +13,7 @@ Metadata:
     ReadmeUrl: README.md
     Labels: [ 'lambda','cloudwatch','cron','cloudformation','change-set' ]
     HomePageUrl: https://github.com/mgorski-mg/aws-failed-change-sets-destroyer
-    SemanticVersion: 1.1.1
+    SemanticVersion: 1.1.2
     SourceCodeUrl: https://github.com/mgorski-mg/aws-failed-change-sets-destroyer
 
 Parameters:
@@ -34,9 +34,12 @@ Resources:
       Description: Deletes failed change sets from CloudFormation stacks.
       CodeUri: code/
       Handler: handler.lambda_handler
-      Runtime: python3.8
+      Runtime: python3.9
       Timeout: 900
+      MemorySize: 128
       Tracing: Active
+      Architectures:
+        - arm64
       # SAM not used because of a bug in Enabled: !Ref SchedulerEnabledParameter - https://github.com/awslabs/serverless-application-model/issues/1360
       #      Events:
       #        Schedule:

@@ -14,7 +14,7 @@ This lambda is removing all failed change sets so the error should not occur.
 
 ## Getting Started
 ### Prerequisites
-- Python 3.8+
+- Python 3.9+
 - [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
 
 ### Deployment
