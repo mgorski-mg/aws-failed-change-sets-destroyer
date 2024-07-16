@@ -34,7 +34,7 @@ Resources:
       Description: Deletes failed change sets from CloudFormation stacks.
       CodeUri: code/
       Handler: handler.lambda_handler
-      Runtime: python3.9
+      Runtime: python3.12
       Timeout: 900
       MemorySize: 128
       Tracing: Active
