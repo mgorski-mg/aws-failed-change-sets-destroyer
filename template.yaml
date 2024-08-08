@@ -26,6 +26,10 @@ Parameters:
     Description: Enable scheduler. Default is ENABLED.
     Default: ENABLED
     AllowedValues: [ ENABLED, DISABLED ]
+  LambdaTimeout:
+    Type: Number
+    Default: 900
+    Description: How long the lambda is allowed to run, in seconds
 
 Resources:
   FailedChangeSetsDestroyer:
@@ -35,7 +39,7 @@ Resources:
       CodeUri: code/
       Handler: handler.lambda_handler
       Runtime: python3.12
-      Timeout: 900
+      Timeout: !Ref 'LambdaTimeout'
       MemorySize: 128
       Tracing: Active
       Architectures:
